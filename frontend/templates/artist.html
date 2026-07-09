@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Artist.Name}} Groupie Tracker</title>
+    <link rel="stylesheet" href="../css/artist.css">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <link rel="icon" href="{{.MyAPI.Image}}" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="home-icon" aria-label="Back to home">
+            <span aria-hidden="true">GT</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#section1">Overview</a></li>
+            <li><a href="#section2">Members</a></li>
+            <li><a href="#section3">Locations</a></li>
+            <li><a href="#section4">Recap</a></li>
+            <li><a href="#section5">Watch</a></li>
+        </ul>
+        <button class="menu-toggle" id="mobile-menu" type="button" aria-label="Open navigation menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </nav>
+
+    <main>
+        <section id="section1" class="section1-content">
+            <div class="section1-inner-content">
+                <div class="artist-portrait-wrap">
+                    <img src="{{.MyAPI.Image}}" alt="{{.Artist.Name}}" class="section1-image">
+                </div>
+                <div class="section1-text">
+                    <p class="eyebrow">Artist dossier</p>
+                    <h1>{{.Artist.Name}}</h1>
+                    <dl class="fact-list">
+                        <div>
+                            <dt>Creation Date</dt>
+                            <dd class="section1-highlight">{{.Artist.CreationDate}}</dd>
+                        </div>
+                        <div>
+                            <dt>First Album</dt>
+                            <dd class="section1-highlight">{{.Artist.FirstAlbum}}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <section id="section2" class="section2-content">
+            <div class="section-heading">
+                <p class="eyebrow">The people behind the sound</p>
+                <h2 class="section2-title">Members</h2>
+            </div>
+            <p class="section2-members">
+                {{range $index, $member := .Artist.Members}}
+                    {{if $index}}, {{end}}<span class="section2-member-name">{{$member}}</span>
+                {{end}}
+            </p>
+            <div class="section2-grid">
+                {{range $key, $value := .MyAPI.MembersImages}}
+                <div class="section2-member">
+                    <img src="{{ $value }}" alt="{{ $key }}" class="section2-image">
+                    <p class="section2-name">{{ $key }}</p>
+                </div>
+                {{end}}
+            </div>
+        </section>
+
+        <section id="section3" class="carousel-section">
+            <div class="section-heading">
+                <p class="eyebrow">Tour geography</p>
+                <h2 class="carousel-title-main">Locations</h2>
+            </div>
+
+            <button class="carousel-button left-button" id="left-button" type="button" aria-label="Previous location">&#10094;</button>
+
+            <div class="carousel-container" id="carousel-container">
+                <div class="carousel-item map-container">
+                    <div id="map" style="width: 100%; height: 100%;"></div>
+                </div>
+
+                {{range $location, $details := .MyAPI.LocationImages}}
+                <div class="carousel-item">
+                    <img src="{{index $details 0}}" alt="{{ $location }}" class="carousel-image">
+                    <div class="carousel-text">
+                        <h3 class="carousel-title">{{ $location }}</h3>
+                        <ul class="carousel-dates">
+                            {{range $i, $date := $details}}
+                            {{if ne $i 0}}
+                            <li>{{ $date }}</li>
+                            {{end}}
+                            {{end}}
+                        </ul>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+
+            <button class="carousel-button right-button" id="right-button" type="button" aria-label="Next location">&#10095;</button>
+        </section>
+
+        <section id="section4" class="info-section">
+            <div class="section-heading">
+                <p class="eyebrow">Schedule intelligence</p>
+                <h2>Recap</h2>
+            </div>
+            <table class="info-table">
+                <tr>
+                    <td class="info-label">Locations</td>
+                    <td class="info-value">
+                        <ul class="location-list">
+                            {{range $i, $v := .Locations.Locations}}
+                            <li>{{$i}} - <a href="#" class="location-link" location-str="{{$v}}" target="_blank"> {{$v}} </a></li>
+                            {{end}}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="info-label">Locations - Dates</td>
+                    <td class="info-value">
+                        {{range $place, $dates := .Relations.DatesLocations}}
+                        <div class="relation-item">
+                            <strong class="relation-place">+ {{$place}}</strong>
+                            <ul class="relation-dates-list">
+                                {{range $dates}}
+                                <li class="relation-date-item">{{.}}</li>
+                                {{end}}
+                            </ul>
+                        </div>
+                        {{end}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="date-section">
+                        <strong>All Dates:</strong>
+                        <div class="date-div">
+                            {{range .Dates.Dates}}
+                            <span class="date-item">{{.}}</span><br />
+                            {{end}}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="section5" class="carousel-section video-section">
+            <div class="section-heading">
+                <p class="eyebrow">Best moments</p>
+                <h2 class="carousel-title-main">Best-of</h2>
+            </div>
+
+            <button class="carousel-button left-button" id="left-button" type="button" aria-label="Previous video">&#10094;</button>
+
+            <div class="carousel-container" id="carousel-container">
+                {{range .MyAPI.YoutubeURL}}
+                <div class="carousel-item">
+                    <div class="youtube-video">
+                        {{.}}
+                    </div>
+                </div>
+                {{end}}
+            </div>
+
+            <button class="carousel-button right-button" id="right-button" type="button" aria-label="Next video">&#10095;</button>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <a href="https://github.com/Stanley-0ps" target="_blank" class="footer-link" rel="noreferrer">
+            <img src="https://i.postimg.cc/wxsg8CN0/github-icon-2.png" alt="GitHub Logo" class="github-logo">
+            Stanley-0ps
+        </a>
+    </footer>
+
+    <script src="../js/navScript.js"></script>
+    <script src="../js/carousel.js"></script>
+    <script src="../js/clickMap.js"></script>
+
+    <script>
+        window.locations = [];
+        {{range .Locations.Locations}}
+        window.locations.push("{{.}}");
+        {{end}}
+    </script>
+    <script>
+        window.MAPBOX_ACCESS_TOKEN = "{{.MapboxToken}}";
+    </script>
+    <script defer src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <script defer src="../js/mapScript.js"></script>
+</body>
+</html>
