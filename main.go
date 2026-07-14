@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+type PageData struct {
+	Title   string
+	Message string
+}
+
 func main() {
 	http.HandleFunc("/", homeHandler)
 
@@ -22,8 +27,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data := PageData{
+		Title:   "Groupie Tracker",
+		Message: "Welcome! This page is rendered using Go templates.",
+	}
+
 	//rendering template
-	err = tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, "Unable to render template", http.StatusInternalServerError)
 		return
