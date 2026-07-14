@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 )
@@ -14,5 +15,17 @@ func main() {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello Groupie Tracker"))
+	//parsing the html template
+	tmpl, err := template.ParseFiles("templates/index.html")
+	if err != nil {
+		http.Error(w, "Template not found", http.StatusInternalServerError)
+		return
+	}
+
+	//rendering template
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		http.Error(w, "Unable to render template", http.StatusInternalServerError)
+		return
+	}
 }
