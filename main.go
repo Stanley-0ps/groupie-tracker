@@ -12,10 +12,12 @@ type PageData struct {
 }
 
 type Artist struct {
+	ID           int
 	Name         string
 	Image        string
-	ID           int
+	Members      []string
 	CreationDate int
+	FirstAlbum   int
 }
 
 func main() {
