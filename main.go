@@ -7,8 +7,15 @@ import (
 )
 
 type PageData struct {
-	Title   string
-	Message string
+	Title  string
+	Artist []Artist
+}
+
+type Artist struct {
+	Name         string
+	Image        string
+	ID           int
+	CreationDate int
 }
 
 func main() {
@@ -28,8 +35,22 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := PageData{
-		Title:   "Groupie Tracker",
-		Message: "Welcome! This page is rendered using Go templates.",
+		Title: "Groupie Tracker",
+		Artist: []Artist{
+			{
+				Name:         "Queen",
+				Image:        "queen.jpg",
+				ID:           1,
+				CreationDate: 1970,
+			},
+
+			{
+				Name:         "Coldplay",
+				Image:        "coldplay.jpg",
+				ID:           2,
+				CreationDate: 1997,
+			},
+		},
 	}
 
 	//rendering template

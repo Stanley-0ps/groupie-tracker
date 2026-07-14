@@ -7,7 +7,22 @@
 </head>
 <body>
     <h1>{{.Title}}</h1>
-    <p>{{.Message}}</p>
-    
+<div class="artists">
+        {{range .Artists}}
+
+<div class="card">
+    <img src="{{.Image}}">
+
+    <h2>{{.Name}}</h2>
+
+    <p>Created: {{.CreationDate}}</p>
+
+    <a href="/artist?id={{.ID}}">
+        View Details
+    </a>
+    </div>
+
+{{end}}
+    </div>
 </body>
 </html>
