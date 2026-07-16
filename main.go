@@ -6,29 +6,31 @@ import (
 	"net/http"
 )
 
-type PageData struct {
-	Title  string
-	Artist []Artist
-}
-
-type Artist struct {
-	ID           int
-	Name         string
-	Image        string
-	Members      []string
-	CreationDate int
-	FirstAlbum   int
-}
 
 func main() {
+	//Serve static files(CSS, images, js)
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	// Route
 	http.HandleFunc("/", homeHandler)
 
 	log.Println("Server running on http://localhost:8080")
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
+// Home Page handler
 func homeHandler(w http.ResponseWriter, r *http.Request) {
+	// only allow the home route
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
 	//parsing the html template
 	tmpl, err := template.ParseFiles("templates/index.html")
 	if err != nil {
