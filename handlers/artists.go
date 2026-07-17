@@ -56,7 +56,11 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.Execute(w, selectedArtist)
+	pageData := models.ArtistPageData{
+		Artist:   selectedArtist,
+		Location: locations,
+	}
+	err = tmpl.Execute(w, pageData)
 	if err != nil {
 		http.Error(w, "Unable to render template", http.StatusInternalServerError)
 		return

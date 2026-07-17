@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Name}}</title>
+    <title>{{.Artist.Name}}</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
@@ -11,7 +11,7 @@
 <body>
 
 <header>
-    <h1>{{.Name}}</h1>
+    <h1>{{.Artist.Name}}</h1>
 </header>
 
 <main>
@@ -20,16 +20,16 @@
 
     <img src="{{.Image}}" alt="{{.Name}}">
 
-    <h2>{{.Name}}</h2>
+    <h2>{{.Artist.Name}}</h2>
 
-    <p><strong>Created:</strong> {{.CreationDate}}</p>
+    <p><strong>Created:</strong> {{.Artist.CreationDate}}</p>
 
-    <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
+    <p><strong>First Album:</strong> {{.Artist.FirstAlbum}}</p>
 
     <h3>Members</h3>
 
     <ul>
-        {{range .Members}}
+        {{range Artist.Members}}
             <li>{{.}}</li>
         {{end}}
     </ul>
