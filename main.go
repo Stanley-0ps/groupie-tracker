@@ -11,7 +11,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 
+	//Routes
 	http.HandleFunc("/", handlers.HomeHandler)
+	http.HandleFunc("/artist", handlers.ArtistHandler)
 
 	log.Println("Server running on port http://localhost:8080")
 

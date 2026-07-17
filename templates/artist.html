@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Name}}</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>{{.Name}}</h1>
+</header>
+
+<main>
+
+<div class="card">
+
+    <img src="{{.Image}}" alt="{{.Name}}">
+
+    <h2>{{.Name}}</h2>
+
+    <p><strong>Created:</strong> {{.CreationDate}}</p>
+
+    <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
+
+    <h3>Members</h3>
+
+    <ul>
+        {{range .Members}}
+            <li>{{.}}</li>
+        {{end}}
+    </ul>
+
+    <br>
+
+    <a href="/">← Back to Home</a>
+
+</div>
+
+</main>
+
+</body>
+</html>
