@@ -18,7 +18,7 @@
 
 <div class="card">
 
-    <img src="{{.Image}}" alt="{{.Name}}">
+    <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
 
     <h2>{{.Artist.Name}}</h2>
 
@@ -29,8 +29,15 @@
     <h3>Members</h3>
 
     <ul>
-        {{range Artist.Members}}
+        {{range .Artist.Members}}
             <li>{{.}}</li>
+        {{end}}
+    </ul>
+    
+    <h3>Concert Locations</h3>
+    <ul>
+        {{range .Locations}}
+        <li>{{.}}</li>
         {{end}}
     </ul>
 

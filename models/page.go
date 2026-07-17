@@ -8,7 +8,7 @@ type PageData struct {
 //ArtistPageData holds everything needed by artist.html
 type ArtistPageData struct{
 	Artist Artist
-	Location []string
+	Locations []string
 	Dates []string
 	Relation map[string][]string
 }
