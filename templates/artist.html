@@ -34,12 +34,19 @@
         {{end}}
     </ul>
     
-    <h3>Concert Locations</h3>
-    <ul>
-        {{range .Locations}}
+<h3>Concert Schedule</h3>
+
+{{range $location, $dates := .Relation}}
+
+<h4>{{$location}}</h4>
+
+<ul>
+    {{range $dates}}
         <li>{{.}}</li>
-        {{end}}
-    </ul>
+    {{end}}
+</ul>
+
+{{end}}
 
     <br>
 

@@ -39,6 +39,13 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//fetch artist relation
+	relations, err := api.FetchRelations()
+	if err != nil {
+		http.Error(w, "Unable to fetch relations", http.StatusInternalServerError)
+		return
+	}
+
 	// Find the requested artist
 	var selectedArtist models.Artist
 	found := false
@@ -66,6 +73,16 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//Find artist relations
+	var artistRelation map[string][]string
+
+	for _, relation := range relations {
+		if relation.ID == artistID {
+			artistRelation = relation.DatesLocations
+			break
+		}
+	}
+
 	tmpl, err := template.ParseFiles("templates/artist.html")
 	if err != nil {
 		http.Error(w, "Unable to load template", http.StatusInternalServerError)
@@ -73,12 +90,13 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pageData := models.ArtistPageData{
-		Artist:   selectedArtist,
+		Artist:    selectedArtist,
 		Locations: artistLocations,
+		Relation:  artistRelation,
 	}
 	err = tmpl.Execute(w, pageData)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Unable to render template", http.StatusInternalServerError)
 		return
 	}
 }
