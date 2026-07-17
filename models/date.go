@@ -8,3 +8,4 @@ type Date struct {
 type DatesResponse struct {
 	Index []Date `json:"index"`
 }
+

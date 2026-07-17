@@ -3,28 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Groupie Tracker</title>
+    <title>{{.Title}}</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
+
+<header>
     <h1>{{.Title}}</h1>
+</header>
+
+<main>
+
 <div class="artists">
-        {{range .Artists}}
+
+{{range .Artists}}
 
 <div class="card">
-    <img src="{{.Image}}">
+
+    <img src="{{.Image}}" alt="{{.Name}}">
 
     <h2>{{.Name}}</h2>
 
     <p>Created: {{.CreationDate}}</p>
 
+    <p>First Album: {{.FirstAlbum}}</p>
+
     <a href="/artist?id={{.ID}}">
         View Details
     </a>
-    </div>
+
+</div>
 
 {{end}}
-    </div>
+
+</div>
+
+</main>
+
 </body>
 </html>
