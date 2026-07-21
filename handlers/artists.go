@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"groupie-tracker/api"
+	"groupie-tracker/helpers"
 	"groupie-tracker/models"
 	"html/template"
 	"net/http"
@@ -83,7 +84,14 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	tmpl, err := template.ParseFiles("templates/artist.html")
+	// Register custom template functions.
+	funcMap := template.FuncMap{
+		"formatLocation": helpers.FormatLocation,
+	}
+
+	tmpl, err := template.New("artist.html").
+		Funcs(funcMap).
+		ParseFiles("templates/artist.html")
 	if err != nil {
 		http.Error(w, "Unable to load template", http.StatusInternalServerError)
 		return
