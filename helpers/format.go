@@ -31,14 +31,22 @@ func FormatLocation(location string) string {
 
 func CapitalizeWord(word string) string {
 
-	// Handle empty strings to avoid index errors.
 	if word == "" {
 		return ""
 	}
 
-	// Convert the entire word to lowercase first.
-	word = strings.ToLower(word)
+	// Common abbreviations that should remain uppercase.
+	abbreviations := map[string]string{
+		"usa": "USA",
+		"uk":  "UK",
+		"uae": "UAE",
+	}
 
-	// Capitalize only the first letter.
-	return strings.ToUpper(word[:1]) + word[1:]
+	lower := strings.ToLower(word)
+
+	if value, ok := abbreviations[lower]; ok {
+		return value
+	}
+
+	return strings.ToUpper(lower[:1]) + lower[1:]
 }
