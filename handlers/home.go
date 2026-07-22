@@ -24,6 +24,15 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	searchQuery := strings.TrimSpace(r.URL.Query().Get("search"))
+	filters, err := helpers.ParseSearchFilters(
+		r.URL.Query().Get("creationYear"),
+		r.URL.Query().Get("firstAlbumYear"),
+		r.URL.Query().Get("memberCount"),
+	)
+	if err != nil {
+		http.Error(w, "invalid filter", http.StatusBadRequest)
+		return
+	}
 
 	// Fetch all artists from the API.
 	artists, err := api.FetchArtists(r.Context())
@@ -43,15 +52,18 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Filter the artists based on the user's search.
 	// If the search query is empty, all artists are returned.
-	filteredArtists := helpers.SearchArtists(artists, searchQuery)
+	filteredArtists := helpers.FilterArtists(helpers.SearchArtists(artists, searchQuery), filters)
 
 	// Prepare the data that will be sent to the template.
 	pageData := models.PageData{
-		Title:        "Groupie Tracker",
-		Artists:      filteredArtists,
-		Search:       searchQuery,
-		ResultCount:  len(filteredArtists),
-		SearchActive: searchQuery != "",
+		Title:         "Groupie Tracker",
+		Artists:       filteredArtists,
+		Search:        searchQuery,
+		Filters:       filters,
+		FilterOptions: helpers.BuildFilterOptions(artists),
+		ResultCount:   len(filteredArtists),
+		SearchActive:  searchQuery != "",
+		FiltersActive: filters != (models.SearchFilters{}),
 	}
 
 	// Parse the HTML template.

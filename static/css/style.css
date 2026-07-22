@@ -47,7 +47,7 @@ main { width: min(1120px, calc(100% - 2rem)); margin: -3.25rem auto 4rem; }
 .search-fields { display: flex; flex-wrap: wrap; gap: .4rem; margin: .85rem 0 0; padding: 0; list-style: none; }
 .search-fields li { padding: .22rem .55rem; color: #4f3db7; background: #f0edff; border-radius: 999px; font-size: .72rem; font-weight: 700; }
 
-.search-form { position: relative; display: flex; align-items: center; gap: .55rem; }
+.search-form { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; }
 .search-icon { position: absolute; left: 1rem; color: var(--muted); font-size: 1.45rem; line-height: 1; transform: rotate(-20deg); }
 .search-form input {
     width: 100%; min-width: 0; height: 3.25rem; padding: 0 5.6rem 0 3rem;
@@ -62,8 +62,12 @@ main { width: min(1120px, calc(100% - 2rem)); margin: -3.25rem auto 4rem; }
     cursor: pointer; text-decoration: none; transition: background .18s, transform .18s;
 }
 .search-form button:hover, .empty-state a:hover { background: var(--accent-dark); transform: translateY(-1px); }
-.clear-search { position: absolute; right: 6.1rem; color: var(--muted); font-size: .8rem; font-weight: 700; text-decoration: none; }
+.clear-search { position: absolute; top: 1.15rem; right: 6.1rem; color: var(--muted); font-size: .8rem; font-weight: 700; text-decoration: none; }
 .clear-search:hover { color: var(--ink); }
+.filter-controls { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
+.filter-controls label { display: block; margin-bottom: .3rem; color: var(--muted); font-size: .75rem; font-weight: 700; }
+.filter-controls select { width: 100%; height: 2.7rem; padding: 0 .7rem; color: var(--ink); background: #f8f9fc; border: 1px solid var(--border); border-radius: .65rem; font: inherit; }
+.filter-controls select:focus { border-color: var(--accent); outline: 3px solid #6750e826; }
 
 .result-summary { margin: 2rem .25rem 1rem; color: var(--muted); font-size: .93rem; }
 .result-summary strong { color: var(--ink); }
@@ -89,7 +93,8 @@ main { width: min(1120px, calc(100% - 2rem)); margin: -3.25rem auto 4rem; }
     header { padding: 2.75rem 1rem 5rem; }
     main { width: min(100% - 1.25rem, 1120px); margin-top: -2.3rem; }
     .search-panel { grid-template-columns: 1fr; gap: 1rem; padding: 1.3rem; }
-    .search-form { flex-wrap: wrap; }
+    .search-form { grid-template-columns: 1fr; }
     .search-form button { width: 100%; }
-    .clear-search { right: 1rem; bottom: 4.35rem; }
+    .filter-controls { grid-template-columns: 1fr; }
+    .clear-search { top: 1.15rem; right: 1rem; }
 }

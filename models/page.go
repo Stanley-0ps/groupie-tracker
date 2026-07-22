@@ -1,11 +1,14 @@
 package models
 
 type PageData struct {
-	Title        string
-	Artists      []Artist
-	Search       string
-	ResultCount  int
-	SearchActive bool
+	Title         string
+	Artists       []Artist
+	Search        string
+	Filters       SearchFilters
+	FilterOptions FilterOptions
+	ResultCount   int
+	SearchActive  bool
+	FiltersActive bool
 }
 
 // ArtistPageData holds everything needed by artist.html.

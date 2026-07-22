@@ -34,13 +34,44 @@
             {{if .SearchActive}}
             <a class="clear-search" href="/" aria-label="Clear search">Clear</a>
             {{end}}
-            <button type="submit">Search</button>
+            <div class="filter-controls">
+                <div>
+                    <label for="creation-year">Creation year</label>
+                    <select id="creation-year" name="creationYear">
+                        <option value="">Any creation year</option>
+                        {{range .FilterOptions.CreationYears}}
+                        <option value="{{.}}" {{if eq . $.Filters.CreationYear}}selected{{end}}>{{.}}</option>
+                        {{end}}
+                    </select>
+                </div>
+                <div>
+                    <label for="album-year">First album year</label>
+                    <select id="album-year" name="firstAlbumYear">
+                        <option value="">Any first album year</option>
+                        {{range .FilterOptions.FirstAlbumYears}}
+                        <option value="{{.}}" {{if eq . $.Filters.FirstAlbumYear}}selected{{end}}>{{.}}</option>
+                        {{end}}
+                    </select>
+                </div>
+                <div>
+                    <label for="member-count">Member count</label>
+                    <select id="member-count" name="memberCount">
+                        <option value="">Any member count</option>
+                        {{range .FilterOptions.MemberCounts}}
+                        <option value="{{.}}" {{if eq . $.Filters.MemberCount}}selected{{end}}>{{.}} members</option>
+                        {{end}}
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Apply</button>
         </form>
     </section>
 
     <p class="result-summary" aria-live="polite">
         {{if .SearchActive}}
             {{.ResultCount}} result{{if ne .ResultCount 1}}s{{end}} for <strong>“{{.Search}}”</strong>
+        {{else if .FiltersActive}}
+            {{.ResultCount}} artist{{if ne .ResultCount 1}}s{{end}} match the selected filters
         {{else}}
             Browse all {{.ResultCount}} artists
         {{end}}
