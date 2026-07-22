@@ -1,0 +1,47 @@
+package helpers
+
+import (
+	"groupie-tracker/models"
+	"reflect"
+	"testing"
+)
+
+func TestSearchArtists(t *testing.T) {
+	t.Parallel()
+
+	artists := []models.Artist{
+		{ID: 1, Name: "Queen", CreationDate: 1970, Members: []string{"Freddie Mercury", "Brian May", "John Deacon"}},
+		{ID: 2, Name: "Coldplay", CreationDate: 1996, Members: []string{"Chris Martin", "Jonny Buckland", "Will Champion", "Guy Berryman"}},
+		{ID: 3, Name: "The Beatles", CreationDate: 1960, Members: []string{"John Lennon", "Paul McCartney", "George Harrison", "Ringo Starr"}},
+	}
+
+	got := SearchArtists(artists, "  QUEEN ")
+	want := artists[:1]
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() = %#v, want %#v", got, want)
+	}
+
+	if got := SearchArtists(artists, ""); !reflect.DeepEqual(got, artists) {
+		t.Fatalf("SearchArtists() with empty query = %#v, want all artists", got)
+	}
+
+	if got, want := SearchArtists(artists, "fReDdIe"), artists[:1]; !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() by member = %#v, want %#v", got, want)
+	}
+
+	if got, want := SearchArtists(artists, "martin"), artists[1:2]; !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() by partial member name = %#v, want %#v", got, want)
+	}
+
+	if got, want := SearchArtists(artists, "john"), []models.Artist{artists[0], artists[2]}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() by shared member name = %#v, want %#v", got, want)
+	}
+
+	if got, want := SearchArtists(artists, "1970"), artists[:1]; !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() by creation year = %#v, want %#v", got, want)
+	}
+
+	if got, want := SearchArtists(artists, "19"), artists; !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() by partial creation year = %#v, want %#v", got, want)
+	}
+}

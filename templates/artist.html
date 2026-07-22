@@ -33,19 +33,35 @@
             <li>{{.}}</li>
         {{end}}
     </ul>
-    
+
+<h3>Locations</h3>
+
+{{if .Locations}}
+<ul>
+    {{range .Locations}}
+        <li>{{formatLocation .}}</li>
+    {{end}}
+</ul>
+{{else}}
+<p>No locations available.</p>
+{{end}}
+
 <h3>Concert Schedule</h3>
 
-{{range $location, $dates := .Relation}}
+{{if .Schedule}}
+{{range .Schedule}}
 
-<h4>{{formatLocation $location}}</h4>
+<h4>{{formatLocation .Location}}</h4>
 
 <ul>
-    {{range $dates}}
+    {{range .Dates}}
         <li>{{.}}</li>
     {{end}}
 </ul>
 
+{{end}}
+{{else}}
+<p>No concert dates available.</p>
 {{end}}
 
     <br>

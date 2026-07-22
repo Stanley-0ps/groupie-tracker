@@ -6,67 +6,57 @@ import (
 	"groupie-tracker/models"
 	"html/template"
 	"net/http"
+	"sort"
 	"strconv"
 )
 
 func ArtistHandler(w http.ResponseWriter, r *http.Request) {
-	// Only allow the /artist route
+	if r.Method != http.MethodGet {
+		w.Header().Set("Allow", http.MethodGet)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 	if r.URL.Path != "/artist" {
 		http.NotFound(w, r)
 		return
 	}
 
-	// Get the id from the URL
-	id := r.URL.Query().Get("id")
-
-	// Convert it to an integer
-	artistID, err := strconv.Atoi(id)
-	if err != nil {
-		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
+	artistID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || artistID < 1 {
+		http.Error(w, "invalid artist ID", http.StatusBadRequest)
 		return
 	}
 
-	// Fetch all artists
-	artists, err := api.FetchArtists()
+	artists, err := api.FetchArtists(r.Context())
 	if err != nil {
-		http.Error(w, "Unable to fetch artists", http.StatusInternalServerError)
+		http.Error(w, "unable to fetch artists", http.StatusInternalServerError)
+		return
+	}
+	locations, err := api.FetchLocations(r.Context())
+	if err != nil {
+		http.Error(w, "unable to fetch locations", http.StatusInternalServerError)
+		return
+	}
+	relations, err := api.FetchRelations(r.Context())
+	if err != nil {
+		http.Error(w, "unable to fetch relations", http.StatusInternalServerError)
 		return
 	}
 
-	// Fetch all artist locations
-	locations, err := api.FetchLocations()
-	if err != nil {
-		http.Error(w, "Unable to fetch locations", http.StatusInternalServerError)
-		return
-	}
-
-	//fetch artist relation
-	relations, err := api.FetchRelations()
-	if err != nil {
-		http.Error(w, "Unable to fetch relations", http.StatusInternalServerError)
-		return
-	}
-
-	// Find the requested artist
-	var selectedArtist models.Artist
+	var artist models.Artist
 	found := false
-
-	for _, artist := range artists {
-		if artist.ID == artistID {
-			selectedArtist = artist
-			found = true
+	for _, candidate := range artists {
+		if candidate.ID == artistID {
+			artist, found = candidate, true
 			break
 		}
 	}
-
 	if !found {
 		http.NotFound(w, r)
 		return
 	}
 
-	// Find artist locations
 	var artistLocations []string
-
 	for _, location := range locations {
 		if location.ID == artistID {
 			artistLocations = location.Locations
@@ -74,37 +64,34 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//Find artist relations
-	var artistRelation map[string][]string
-
+	var schedule []models.ScheduleEntry
 	for _, relation := range relations {
-		if relation.ID == artistID {
-			artistRelation = relation.DatesLocations
-			break
+		if relation.ID != artistID {
+			continue
 		}
+		for location, dates := range relation.DatesLocations {
+			schedule = append(schedule, models.ScheduleEntry{Location: location, Dates: dates})
+		}
+		break
 	}
+	sort.Slice(schedule, func(i, j int) bool {
+		return schedule[i].Location < schedule[j].Location
+	})
 
-	// Register custom template functions.
-	funcMap := template.FuncMap{
+	tmpl, err := template.New("artist.html").Funcs(template.FuncMap{
 		"formatLocation": helpers.FormatLocation,
-	}
-
-	tmpl, err := template.New("artist.html").
-		Funcs(funcMap).
-		ParseFiles("templates/artist.html")
+	}).ParseFiles("templates/artist.html")
 	if err != nil {
-		http.Error(w, "Unable to load template", http.StatusInternalServerError)
+		http.Error(w, "unable to load template", http.StatusInternalServerError)
 		return
 	}
 
 	pageData := models.ArtistPageData{
-		Artist:    selectedArtist,
+		Artist:    artist,
 		Locations: artistLocations,
-		Relation:  artistRelation,
+		Schedule:  schedule,
 	}
-	err = tmpl.Execute(w, pageData)
-	if err != nil {
-		http.Error(w, "Unable to render template", http.StatusInternalServerError)
-		return
+	if err := tmpl.Execute(w, pageData); err != nil {
+		http.Error(w, "unable to render template", http.StatusInternalServerError)
 	}
 }

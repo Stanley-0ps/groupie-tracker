@@ -4,43 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Title}}</title>
-
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
-
 <header>
+    <p class="eyebrow">Discover live music</p>
     <h1>{{.Title}}</h1>
 </header>
 
 <main>
+    <section class="search-panel" aria-labelledby="search-heading">
+        <div>
+            <h2 id="search-heading">Find an artist</h2>
+            <p>Search the artists in the collection by name.</p>
+        </div>
 
-<div class="artists">
+        <form class="search-form" action="/" method="get" role="search">
+            <label class="sr-only" for="artist-search">Artist name</label>
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="artist-search" type="search" name="search" placeholder="Try “Queen” or “ABBA”" value="{{.Search}}" autocomplete="off">
+            {{if .SearchActive}}
+            <a class="clear-search" href="/" aria-label="Clear search">Clear</a>
+            {{end}}
+            <button type="submit">Search</button>
+        </form>
+    </section>
 
-{{range .Artists}}
+    <p class="result-summary" aria-live="polite">
+        {{if .SearchActive}}
+            {{.ResultCount}} result{{if ne .ResultCount 1}}s{{end}} for <strong>“{{.Search}}”</strong>
+        {{else}}
+            Browse all {{.ResultCount}} artists
+        {{end}}
+    </p>
 
-<div class="card">
-
-    <img src="{{.Image}}" alt="{{.Name}}">
-
-    <h2>{{.Name}}</h2>
-
-    <p>Created: {{.CreationDate}}</p>
-
-    <p>First Album: {{.FirstAlbum}}</p>
-
-    <a href="/artist?id={{.ID}}">
-        View Details
-    </a>
-
-</div>
-
-{{end}}
-
-</div>
-
+    {{if .Artists}}
+    <div class="artists">
+        {{range .Artists}}
+        <article class="card">
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <div class="card-content">
+                <h2>{{.Name}}</h2>
+                <p>Formed {{.CreationDate}}</p>
+                <p>First album: {{.FirstAlbum}}</p>
+                <a href="/artist?id={{.ID}}">View details <span aria-hidden="true">→</span></a>
+            </div>
+        </article>
+        {{end}}
+    </div>
+    {{else}}
+    <section class="empty-state" aria-live="polite">
+        <p class="empty-icon" aria-hidden="true">⌕</p>
+        <h2>No artists found</h2>
+        <p>Try a different spelling or browse the full collection.</p>
+        <a href="/">View all artists</a>
+    </section>
+    {{end}}
 </main>
-
 </body>
 </html>

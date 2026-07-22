@@ -1,16 +1,17 @@
 package api
 
 import (
+	"context"
 	"groupie-tracker/models"
 )
 
 const relationURL = "https://groupietrackers.herokuapp.com/api/relation"
 
-func FetchRelations() ([]models.Relation, error) {
+func FetchRelations(ctx context.Context) ([]models.Relation, error) {
 
 	var response models.RelationsResponse
 
-	err := FetchJSON(relationURL, &response)
+	err := FetchJSON(ctx, relationURL, &response)
 	if err != nil {
 		return nil, err
 	}

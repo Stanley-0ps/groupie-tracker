@@ -1,6 +1,9 @@
 package helpers
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 func FormatLocation(location string) string {
 
@@ -48,5 +51,6 @@ func CapitalizeWord(word string) string {
 		return value
 	}
 
-	return strings.ToUpper(lower[:1]) + lower[1:]
+	first, size := utf8.DecodeRuneInString(lower)
+	return strings.ToUpper(string(first)) + lower[size:]
 }

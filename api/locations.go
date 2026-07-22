@@ -1,16 +1,17 @@
 package api
 
 import (
+	"context"
 	"groupie-tracker/models"
 )
 
 const locationsURL = "https://groupietrackers.herokuapp.com/api/locations"
 
-func FetchLocations() ([]models.Location, error) {
+func FetchLocations(ctx context.Context) ([]models.Location, error) {
 
 	var response models.LocationsResponse
 
-	err := FetchJSON(locationsURL, &response)
+	err := FetchJSON(ctx, locationsURL, &response)
 	if err != nil {
 		return nil, err
 	}
