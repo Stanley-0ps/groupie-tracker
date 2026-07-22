@@ -6,61 +6,57 @@ import (
 	"strings"
 )
 
+// SearchArtists returns artists for which every search term matches at least
+// one searchable field: name, member, creation year, first album, or location.
 func SearchArtists(artists []models.Artist, query string) []models.Artist {
-
-	// Remove extra spaces and convert to lowercase.
-	query = strings.TrimSpace(strings.ToLower(query))
-
-	// If the search box is empty,
-	// return every artist.
-	if query == "" {
+	// Fields normalizes whitespace and case, then supports combined word searches.
+	terms := strings.Fields(strings.ToLower(strings.TrimSpace(query)))
+	if len(terms) == 0 {
 		return artists
 	}
 
 	var filtered []models.Artist
-
-	// Check every searchable artist field. Each artist is appended at most once.
 	for _, artist := range artists {
-		if strings.Contains(strings.ToLower(artist.Name), query) {
+		if matchesAllTerms(artist, terms) {
+			// The artist is appended once after all terms match.
 			filtered = append(filtered, artist)
-			continue
-		}
-
-		// Convert the numeric year so it can use the same partial-match search.
-		if strings.Contains(strconv.Itoa(artist.CreationDate), query) {
-			filtered = append(filtered, artist)
-			continue
-		}
-
-		// FirstAlbum is an API date string, so it can be searched directly.
-		if strings.Contains(strings.ToLower(artist.FirstAlbum), query) {
-			filtered = append(filtered, artist)
-			continue
-		}
-
-		locationMatched := false
-		for _, location := range artist.Locations {
-			if strings.Contains(strings.ToLower(location), query) {
-				filtered = append(filtered, artist)
-				locationMatched = true
-				break
-			}
-		}
-
-		// A location match has already added the artist, so do not duplicate it.
-		if locationMatched {
-			continue
-		}
-
-		for _, member := range artist.Members {
-			if strings.Contains(strings.ToLower(member), query) {
-				// Add each matching artist only once, even if more than one
-				// member matches the query.
-				filtered = append(filtered, artist)
-				break
-			}
 		}
 	}
 
 	return filtered
+}
+
+// matchesAllTerms checks whether each term occurs in any searchable artist field.
+func matchesAllTerms(artist models.Artist, terms []string) bool {
+	for _, term := range terms {
+		if !matchesTerm(artist, term) {
+			// One missing term means this artist does not satisfy the combined search.
+			return false
+		}
+	}
+
+	return true
+}
+
+// matchesTerm checks one normalized term against every field available for search.
+func matchesTerm(artist models.Artist, term string) bool {
+	if strings.Contains(strings.ToLower(artist.Name), term) ||
+		strings.Contains(strconv.Itoa(artist.CreationDate), term) ||
+		strings.Contains(strings.ToLower(artist.FirstAlbum), term) {
+		return true
+	}
+
+	for _, location := range artist.Locations {
+		if strings.Contains(strings.ToLower(location), term) {
+			return true
+		}
+	}
+
+	for _, member := range artist.Members {
+		if strings.Contains(strings.ToLower(member), term) {
+			return true
+		}
+	}
+
+	return false
 }

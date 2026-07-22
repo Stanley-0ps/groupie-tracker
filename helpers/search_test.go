@@ -60,4 +60,16 @@ func TestSearchArtists(t *testing.T) {
 	if got, want := SearchArtists(artists, "uk"), []models.Artist{artists[0], artists[2]}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("SearchArtists() by shared concert location = %#v, want %#v", got, want)
 	}
+
+	if got, want := SearchArtists(artists, "queen freddie 1970"), artists[:1]; !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() by combined fields = %#v, want %#v", got, want)
+	}
+
+	if got := SearchArtists(artists, "queen 1996"); len(got) != 0 {
+		t.Fatalf("SearchArtists() with unmatched combined fields = %#v, want no artists", got)
+	}
+
+	if got, want := SearchArtists(artists, "john 1960"), artists[2:]; !reflect.DeepEqual(got, want) {
+		t.Fatalf("SearchArtists() by member and creation year = %#v, want %#v", got, want)
+	}
 }
