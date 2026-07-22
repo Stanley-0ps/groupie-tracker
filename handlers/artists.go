@@ -80,6 +80,7 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.New("artist.html").Funcs(template.FuncMap{
 		"formatLocation": helpers.FormatLocation,
+		"formatDate":     helpers.FormatDate,
 	}).ParseFiles("templates/artist.html")
 	if err != nil {
 		http.Error(w, "unable to load template", http.StatusInternalServerError)

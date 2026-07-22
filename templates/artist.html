@@ -28,7 +28,7 @@
                 </div>
                 <div>
                     <dt>First album</dt>
-                    <dd>{{.Artist.FirstAlbum}}</dd>
+                    <dd>{{formatDate .Artist.FirstAlbum}}</dd>
                 </div>
             </dl>
 
@@ -63,7 +63,7 @@
                         <h3>{{formatLocation .Location}}</h3>
                         <ul class="date-list">
                             {{range .Dates}}
-                            <li>{{.}}</li>
+                            <li>{{formatDate .}}</li>
                             {{end}}
                         </ul>
                     </section>

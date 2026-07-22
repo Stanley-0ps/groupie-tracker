@@ -73,7 +73,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Parse the HTML template.
-	tmpl, err := template.ParseFiles("templates/index.html")
+	// Register formatting helpers before parsing because templates resolve
+	// functions during parsing, not during rendering.
+	tmpl, err := template.New("index.html").Funcs(template.FuncMap{
+		"formatDate": helpers.FormatDate,
+	}).ParseFiles("templates/index.html")
 	if err != nil {
 		http.Error(w, "Template not found", http.StatusInternalServerError)
 		return

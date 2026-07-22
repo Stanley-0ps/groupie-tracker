@@ -95,7 +95,7 @@
             <div class="card-content">
                 <h2>{{.Name}}</h2>
                 <p>Formed {{.CreationDate}}</p>
-                <p>First album: {{.FirstAlbum}}</p>
+                <p>First album: {{formatDate .FirstAlbum}}</p>
                 <a href="/artist?id={{.ID}}">View details <span aria-hidden="true">→</span></a>
             </div>
         </article>
