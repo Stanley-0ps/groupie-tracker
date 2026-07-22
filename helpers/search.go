@@ -32,6 +32,12 @@ func SearchArtists(artists []models.Artist, query string) []models.Artist {
 			continue
 		}
 
+		// FirstAlbum is an API date string, so it can be searched directly.
+		if strings.Contains(strings.ToLower(artist.FirstAlbum), query) {
+			filtered = append(filtered, artist)
+			continue
+		}
+
 		for _, member := range artist.Members {
 			if strings.Contains(strings.ToLower(member), query) {
 				// Add each matching artist only once, even if more than one
