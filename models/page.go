@@ -6,6 +6,7 @@ type PageData struct {
 	Search        string
 	Filters       SearchFilters
 	FilterOptions FilterOptions
+	SortBy        string
 	ResultCount   int
 	SearchActive  bool
 	FiltersActive bool

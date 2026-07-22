@@ -53,6 +53,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// Filter the artists based on the user's search.
 	// If the search query is empty, all artists are returned.
 	filteredArtists := helpers.FilterArtists(helpers.SearchArtists(artists, searchQuery), filters)
+	filteredArtists, err = helpers.SortArtists(filteredArtists, r.URL.Query().Get("sort"))
+	if err != nil {
+		http.Error(w, "invalid sort option", http.StatusBadRequest)
+		return
+	}
 
 	// Prepare the data that will be sent to the template.
 	pageData := models.PageData{
@@ -61,6 +66,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		Search:        searchQuery,
 		Filters:       filters,
 		FilterOptions: helpers.BuildFilterOptions(artists),
+		SortBy:        r.URL.Query().Get("sort"),
 		ResultCount:   len(filteredArtists),
 		SearchActive:  searchQuery != "",
 		FiltersActive: filters != (models.SearchFilters{}),

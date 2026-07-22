@@ -62,6 +62,16 @@
                         {{end}}
                     </select>
                 </div>
+                <div>
+                    <label for="artist-sort">Sort artists</label>
+                    <select id="artist-sort" name="sort">
+                        <option value="" {{if eq .SortBy ""}}selected{{end}}>Original order</option>
+                        <option value="name-asc" {{if eq .SortBy "name-asc"}}selected{{end}}>Name: A–Z</option>
+                        <option value="name-desc" {{if eq .SortBy "name-desc"}}selected{{end}}>Name: Z–A</option>
+                        <option value="creation-asc" {{if eq .SortBy "creation-asc"}}selected{{end}}>Creation: oldest</option>
+                        <option value="creation-desc" {{if eq .SortBy "creation-desc"}}selected{{end}}>Creation: newest</option>
+                    </select>
+                </div>
             </div>
             <button type="submit">Apply</button>
         </form>

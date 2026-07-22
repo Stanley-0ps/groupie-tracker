@@ -3,74 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Artist.Name}}</title>
-
+    <title>{{.Artist.Name}} | Groupie Tracker</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
-
 <header>
+    <a class="back-link" href="/">← Back to artists</a>
+    <p class="eyebrow">Artist profile</p>
     <h1>{{.Artist.Name}}</h1>
 </header>
 
-<main>
+<main class="artist-page">
+    <article class="artist-profile">
+        <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+        <div class="artist-overview">
+            <h1>{{.Artist.Name}}</h1>
+            <p>Concerts, members, and band history in one place.</p>
 
-<div class="card">
+            <dl class="artist-facts">
+                <div>
+                    <dt>Created</dt>
+                    <dd>{{.Artist.CreationDate}}</dd>
+                </div>
+                <div>
+                    <dt>First album</dt>
+                    <dd>{{.Artist.FirstAlbum}}</dd>
+                </div>
+            </dl>
 
-    <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+            <section class="artist-section" aria-labelledby="members-heading">
+                <h2 id="members-heading">Members</h2>
+                <ul class="member-list">
+                    {{range .Artist.Members}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+            </section>
 
-    <h2>{{.Artist.Name}}</h2>
+            <section class="artist-section" aria-labelledby="locations-heading">
+                <h2 id="locations-heading">Concert locations</h2>
+                {{if .Locations}}
+                <ul class="location-list">
+                    {{range .Locations}}
+                    <li>{{formatLocation .}}</li>
+                    {{end}}
+                </ul>
+                {{else}}
+                <p class="empty-copy">No locations available.</p>
+                {{end}}
+            </section>
 
-    <p><strong>Created:</strong> {{.Artist.CreationDate}}</p>
-
-    <p><strong>First Album:</strong> {{.Artist.FirstAlbum}}</p>
-
-    <h3>Members</h3>
-
-    <ul>
-        {{range .Artist.Members}}
-            <li>{{.}}</li>
-        {{end}}
-    </ul>
-
-<h3>Locations</h3>
-
-{{if .Locations}}
-<ul>
-    {{range .Locations}}
-        <li>{{formatLocation .}}</li>
-    {{end}}
-</ul>
-{{else}}
-<p>No locations available.</p>
-{{end}}
-
-<h3>Concert Schedule</h3>
-
-{{if .Schedule}}
-{{range .Schedule}}
-
-<h4>{{formatLocation .Location}}</h4>
-
-<ul>
-    {{range .Dates}}
-        <li>{{.}}</li>
-    {{end}}
-</ul>
-
-{{end}}
-{{else}}
-<p>No concert dates available.</p>
-{{end}}
-
-    <br>
-
-    <a href="/">← Back to Home</a>
-
-</div>
-
+            <section class="artist-section" aria-labelledby="schedule-heading">
+                <h2 id="schedule-heading">Concert schedule</h2>
+                {{if .Schedule}}
+                <div class="schedule-list">
+                    {{range .Schedule}}
+                    <section class="schedule-item">
+                        <h3>{{formatLocation .Location}}</h3>
+                        <ul class="date-list">
+                            {{range .Dates}}
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
+                    </section>
+                    {{end}}
+                </div>
+                {{else}}
+                <p class="empty-copy">No concert dates available.</p>
+                {{end}}
+            </section>
+        </div>
+    </article>
 </main>
-
 </body>
 </html>
