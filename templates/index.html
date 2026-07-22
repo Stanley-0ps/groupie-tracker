@@ -17,13 +17,20 @@
     <section class="search-panel" aria-labelledby="search-heading">
         <div>
             <h2 id="search-heading">Find an artist</h2>
-            <p>Search the artists in the collection by name.</p>
+            <p id="search-help">Combine words to narrow results across the collection.</p>
+            <ul class="search-fields" aria-label="Searchable fields">
+                <li>Artist</li>
+                <li>Member</li>
+                <li>Year</li>
+                <li>Album</li>
+                <li>Location</li>
+            </ul>
         </div>
 
         <form class="search-form" action="/" method="get" role="search">
             <label class="sr-only" for="artist-search">Artist name</label>
             <span class="search-icon" aria-hidden="true">⌕</span>
-            <input id="artist-search" type="search" name="search" placeholder="Try “Queen” or “ABBA”" value="{{.Search}}" autocomplete="off">
+            <input id="artist-search" type="search" name="search" placeholder="Try “Freddie 1970”" value="{{.Search}}" autocomplete="off" aria-describedby="search-help">
             {{if .SearchActive}}
             <a class="clear-search" href="/" aria-label="Clear search">Clear</a>
             {{end}}

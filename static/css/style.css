@@ -44,6 +44,8 @@ main { width: min(1120px, calc(100% - 2rem)); margin: -3.25rem auto 4rem; }
 
 .search-panel h2 { margin: 0 0 .35rem; font-size: 1.2rem; }
 .search-panel p { margin: 0; color: var(--muted); font-size: .92rem; }
+.search-fields { display: flex; flex-wrap: wrap; gap: .4rem; margin: .85rem 0 0; padding: 0; list-style: none; }
+.search-fields li { padding: .22rem .55rem; color: #4f3db7; background: #f0edff; border-radius: 999px; font-size: .72rem; font-weight: 700; }
 
 .search-form { position: relative; display: flex; align-items: center; gap: .55rem; }
 .search-icon { position: absolute; left: 1rem; color: var(--muted); font-size: 1.45rem; line-height: 1; transform: rotate(-20deg); }
