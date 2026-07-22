@@ -31,6 +31,15 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to fetch artists", http.StatusInternalServerError)
 		return
 	}
+	if searchQuery != "" {
+		// Location data is a separate API resource and is needed only for searches.
+		locations, err := api.FetchLocations(r.Context())
+		if err != nil {
+			http.Error(w, "Unable to fetch artist locations", http.StatusInternalServerError)
+			return
+		}
+		artists = helpers.AttachLocations(artists, locations)
+	}
 
 	// Filter the artists based on the user's search.
 	// If the search query is empty, all artists are returned.

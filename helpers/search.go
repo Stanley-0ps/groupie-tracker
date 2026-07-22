@@ -38,6 +38,20 @@ func SearchArtists(artists []models.Artist, query string) []models.Artist {
 			continue
 		}
 
+		locationMatched := false
+		for _, location := range artist.Locations {
+			if strings.Contains(strings.ToLower(location), query) {
+				filtered = append(filtered, artist)
+				locationMatched = true
+				break
+			}
+		}
+
+		// A location match has already added the artist, so do not duplicate it.
+		if locationMatched {
+			continue
+		}
+
 		for _, member := range artist.Members {
 			if strings.Contains(strings.ToLower(member), query) {
 				// Add each matching artist only once, even if more than one
